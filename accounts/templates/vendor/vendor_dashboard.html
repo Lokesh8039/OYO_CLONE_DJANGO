@@ -1,0 +1,48 @@
+{% extends "utils/vendor_base.html" %}
+
+{% block start %}
+<div class="container mt-5 pt-4">
+
+  <div class="mx-auto col-md-6 text-center mb-4">
+    {% include "utils/alerts.html" %}
+    <a href="{% url 'add_hotel' %}" class="btn btn-success shadow-sm">+ Add Hotel</a>
+  </div>
+
+
+  <div class="row">
+    {% for hotel in hotels %}
+      <div class="col-md-4 col-lg-3 mb-4">
+        <div class="card shadow-sm h-100 border-0 rounded-4">
+      
+          {% if hotel.hotel_images.first %}
+            <img src="/media/{{ hotel.hotel_images.first.image }}" class="card-img-top rounded-top-4" style="height: 180px; object-fit: cover;" alt="{{ hotel.hotel_name }}">
+          {% else %}
+            <img src="https://via.placeholder.com/300x180?text=No+Image" class="card-img-top rounded-top-4" alt="No Image">
+          {% endif %}
+
+       
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ hotel.hotel_name }}</h5>
+            <p class="card-text text-muted small">{{ hotel.hotel_description|truncatechars:100 }}</p>
+
+      
+            <div class="mb-2">
+              {% for amenetie in hotel.ameneties.all %}
+                <span class="badge bg-primary me-1 mb-1">{{ amenetie.name }}</span>
+              {% empty %}
+                <span class="badge bg-secondary">No amenities</span>
+              {% endfor %}
+            </div>
+          </div>
+
+        
+          <div class="card-footer d-flex justify-content-between p-2 bg-light border-top rounded-bottom-4">
+            <a href="{% url 'upload_images' hotel.hotel_slug %}" class="btn btn-sm btn-outline-success">Images</a>
+            <a href="{% url 'edit_hotel' hotel.hotel_slug %}" class="btn btn-sm btn-outline-warning">Edit</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

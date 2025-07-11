@@ -1,0 +1,32 @@
+{% extends "utils/vendor_base.html" %}
+
+{% block start %}
+<div class="container mt-5">
+
+  <div class="row g-3">
+    {% for image in images %}
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 position-relative">
+        <div class="border rounded shadow-sm overflow-hidden">
+          <img src="/media/{{ image.image }}" class="img-fluid" style="height: 150px; object-fit: cover; width: 100%;" alt="Hotel Image">
+          <a href="{% url 'delete_image' image.id %}" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1">
+            <i class="bi bi-trash"></i>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" class="mt-5">
+    {% csrf_token %}
+    {% include "utils/alerts.html" %}
+
+    <div class="input-group mb-3">
+      <label class="input-group-text" for="inputGroupFile01"><i class="bi bi-upload"></i> Upload</label>
+      <input type="file" name="image" class="form-control" id="inputGroupFile01" required>
+    </div>
+
+    <button type="submit" class="btn btn-success shadow-sm"><i class="bi bi-cloud-arrow-up"></i> Upload</button>
+  </form>
+
+</div>
+{% endblock %}

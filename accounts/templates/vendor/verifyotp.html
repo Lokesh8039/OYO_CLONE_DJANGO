@@ -1,0 +1,23 @@
+{% extends "utils/base.html" %}
+
+{% block start %}
+<div class="container mt-5 pt-5 pb-5">
+
+  <div class="col-md-6 mx-auto card shadow-lg border-0 rounded-4 p-4">
+    <h4 class="text-center mb-4">Enter OTP</h4>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% include "utils/alerts.html" %}
+
+      <div class="mb-3">
+        <label for="otpInput" class="form-label">OTP</label>
+        <input type="text" name="otp" class="form-control shadow-sm" id="otpInput" placeholder="Enter the OTP sent to your email" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 shadow-sm">Submit</button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

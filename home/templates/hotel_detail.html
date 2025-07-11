@@ -1,0 +1,65 @@
+{% extends "utils/base.html" %}
+
+{% block start %}
+<div class="container my-5 py-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <div class="card-body">
+      
+ 
+      <h2 class="card-title fw-bold mb-3">{{ hotel.hotel_name }}</h2>
+
+      <div class="mb-3">
+        <span class="text-muted me-2" style="text-decoration: line-through;">₹{{ hotel.hotel_price }}</span>
+        <span class="badge bg-success fs-6">₹{{ hotel.hotel_offer_price }}</span>
+      </div>
+
+
+      <p class="text-muted"><i class="bi bi-geo-alt-fill me-1"></i>{{ hotel.hotel_location }}</p>
+
+   
+      <div class="mb-3">
+        <span class="badge bg-primary me-2"><i class="bi bi-droplet-half me-1"></i>Swimming Pool</span>
+        <span class="badge bg-primary"><i class="bi bi-snow me-1"></i>AC</span>
+      </div>
+
+
+      <p class="mt-4">{{ hotel.hotel_description|safe }}</p>
+
+
+      <div class="row mt-4">
+        {% for image in hotel.hotel_images.all %}
+        <div class="col-6 col-md-3 mb-3">
+          <img src="/media/{{ image.image }}" class="img-fluid rounded shadow-sm" style="height: 150px; object-fit: cover;" alt="Hotel Image">
+        </div>
+        {% endfor %}
+      </div>
+
+
+      {% if request.user.is_authenticated %}
+        <form method="POST" class="mt-5">
+          {% csrf_token %}
+          {% include "utils/alerts.html" %}
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Start Date</label>
+              <input type="date" name="start_date" class="form-control shadow-sm" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">End Date</label>
+              <input type="date" name="end_date" class="form-control shadow-sm" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-danger mt-4 w-100 shadow">Book Now</button>
+        </form>
+      {% else %}
+        <div class="mt-5 text-center">
+          <a href="{% url 'login_page' %}" class="btn btn-success btn-lg shadow">Login to Book</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

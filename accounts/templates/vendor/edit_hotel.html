@@ -1,0 +1,82 @@
+{% extends "utils/vendor_base.html" %}
+
+{% block start %}
+<div class="container mt-5 pt-5 pb-5">
+
+
+  <div class="col-md-8 mx-auto card shadow-lg border-0 rounded-4 p-4 mb-5">
+    <h4 class="text-center mb-4">Edit Hotel Details</h4>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% include "utils/alerts.html" %}
+
+  
+      <div class="mb-3">
+        <label for="hotelName" class="form-label">Hotel Name</label>
+        <input type="text" name="hotel_name" class="form-control shadow-sm" id="hotelName"
+               value="{{ hotel.hotel_name }}" required>
+      </div>
+
+    
+      <div class="mb-3">
+        <label for="hotelDescription" class="form-label">Hotel Description</label>
+        <textarea name="hotel_description" class="form-control shadow-sm" id="hotelDescription" rows="4"
+                  placeholder="Describe your hotel...">{{ hotel.hotel_description }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="hotelPrice" class="form-label">Hotel Price</label>
+        <input type="number" name="hotel_price" class="form-control shadow-sm" id="hotelPrice"
+               value="{{ hotel.hotel_price }}" required>
+      </div>
+
+      
+      <div class="mb-3">
+        <label for="offerPrice" class="form-label">Hotel Offer Price</label>
+        <input type="number" name="hotel_offer_price" class="form-control shadow-sm" id="offerPrice"
+               value="{{ hotel.hotel_offer_price }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="hotelAmenities" class="form-label">Hotel Amenities</label>
+        <select name="ameneties" class="form-select shadow-sm" id="hotelAmenities" multiple>
+          {% for amenetie in ameneties %}
+            <option value="{{ amenetie.id }}" {% if amenetie in hotel.ameneties.all %}selected{% endif %}>
+              {{ amenetie.name }}
+            </option>
+          {% endfor %}
+        </select>
+        <small class="form-text text-muted">Hold Ctrl (or Cmd on Mac) to select multiple amenities.</small>
+      </div>
+
+   
+      <div class="mb-3">
+        <label for="hotelLocation" class="form-label">Hotel Location</label>
+        <input type="text" name="hotel_location" class="form-control shadow-sm" id="hotelLocation"
+               value="{{ hotel.hotel_location }}">
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary shadow-sm">Update Hotel</button>
+      </div>
+    </form>
+  </div>
+
+ 
+  <div class="col-md-8 mx-auto card shadow-sm border-0 rounded-4 p-4">
+    <h5 class="text-center mb-3">Booking History</h5>
+    <ul class="list-group">
+      {% for booking in hotel.bookings.all %}
+        <li class="list-group-item">
+          <strong>From:</strong> {{ booking.booking_start_date }} &nbsp;
+          <strong>To:</strong> {{ booking.booking_end_date }}
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted text-center">No bookings yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+</div>
+{% endblock %}
