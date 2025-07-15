@@ -29,8 +29,11 @@ def index(request):
 
 def hotel_details(request, slug):
     hotel = Hotel.objects.get(hotel_slug = slug)
-    hotel_user = HotelUser.objects.get(id=request.user.id)
-    user_name = hotel_user.first_name
+    try:
+        hotel_user = HotelUser.objects.get(id=request.user.id)
+        user_name = hotel_user.first_name
+    except HotelUser.DoesNotExist:
+        user_name = None
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')

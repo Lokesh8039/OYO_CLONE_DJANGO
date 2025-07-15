@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect ,HttpResponse,HttpResponseRedirect
-from .models import HotelUser , HotelVendor,Hotel,Ameneties,HotelImages
+from .models import HotelUser , HotelVendor,Hotel,Ameneties,HotelImages,HotelBooking
 from django.db.models import Q
 from django.contrib import messages
 from .utils import generateRandomToken,sendEmailToken,sendOTPtoEmail,sendEmailToken_vendor,generateSlug
@@ -218,9 +218,12 @@ def verifyEmail_vendor(request,token):
 @login_required(login_url='login_vendor')
 def dashboard(request):
     hotel_vendor = HotelVendor.objects.get(id = request.user.id)
+    hotelbook = Hotel.objects.filter(hotel_owner = hotel_vendor.id)
+    hotelbooking = HotelBooking.objects.filter(hotel__in= hotelbook)
+    
     user_name = hotel_vendor.first_name
-    context = {'hotels' : Hotel.objects.filter(hotel_owner = request.user),'user':user_name}
-    return render(request, 'vendor/vendor_dashboard.html', context)
+    context = {'hotels' : Hotel.objects.filter(hotel_owner = request.user),'user':user_name,'hotelbook':hotelbooking}
+    return render(request, 'vendor/vendor_dashboard.html', context )
 
 
 

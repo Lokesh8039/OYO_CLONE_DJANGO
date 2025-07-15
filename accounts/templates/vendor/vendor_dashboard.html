@@ -45,4 +45,37 @@
     {% endfor %}
   </div>
 </div>
+
+<div class="col-md-10 mx-auto card shadow-sm border-0 rounded-4 p-4">
+  <h5 class="text-center mb-3">Booking History</h5>
+
+  {% if hotelbook %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr class="text-center">
+            <th scope="col">Booking No.</th>
+            <th scope="col">Hotel Name</th>
+            <th scope="col">Booking From</th>
+            <th scope="col">Booking To</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in hotelbook %}
+            <tr class="text-center">
+              <td>{{ forloop.counter }}</td>
+              <td>{{ booking.hotel }}</td>
+              <td>{{ booking.booking_start_date }}</td>
+              <td>{{ booking.booking_end_date }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="text-muted text-center py-3">No bookings yet.</div>
+  {% endif %}
+</div>
+
+
 {% endblock %}

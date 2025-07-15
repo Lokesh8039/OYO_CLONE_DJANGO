@@ -62,21 +62,5 @@
       </div>
     </form>
   </div>
-
- 
-  <div class="col-md-8 mx-auto card shadow-sm border-0 rounded-4 p-4">
-    <h5 class="text-center mb-3">Booking History</h5>
-    <ul class="list-group">
-      {% for booking in hotel.bookings.all %}
-        <li class="list-group-item">
-          <strong>From:</strong> {{ booking.booking_start_date }} &nbsp;
-          <strong>To:</strong> {{ booking.booking_end_date }}
-        </li>
-      {% empty %}
-        <li class="list-group-item text-muted text-center">No bookings yet.</li>
-      {% endfor %}
-    </ul>
-  </div>
-
 </div>
 {% endblock %}
