@@ -24,8 +24,8 @@ def login_page(request):
             return redirect("login_page")
         hotel_user = authenticate(username=hotel_user[0].username,password = password)
         if hotel_user:
-            messages.success(request, "Account Login Success")
             login(request,hotel_user)
+            messages.success(request, "Account Login Success")
             return redirect("/")
         messages.warning(request, "Account Password is Wrong")
         return redirect("login_page")
@@ -40,9 +40,10 @@ def register(request):
         last_name=request.POST.get('last_name')
         email=request.POST.get('email')
         password=request.POST.get('password')
+        
         phone_number=request.POST.get('phone_number')
         
-        hotel_user = HotelUser.objects.filter(Q(email = email) | Q(phone_number = phone_number))
+        hotel_user = HotelUser.objects.filter(Q(email = email) | Q(phone_number = phone_number) )
         if hotel_user.exists():
             messages.warning(request, "Your account exists with This Phone Number and Email")
             return redirect("register")
@@ -89,6 +90,7 @@ def send_otp(request, email):
     hotel_user.update(otp =otp)
 
     sendOTPtoEmail(email , otp)
+    messages.success(request, f"OTP Sent To {email}.")
     return redirect(f'/account/verify-otp/{email}/')
 
 def verify_otp(request , email):
@@ -97,7 +99,7 @@ def verify_otp(request , email):
         hotel_user = HotelUser.objects.get(email = email)
 
         if otp == hotel_user.otp:
-            messages.success(request, "Login Success")
+            messages.success(request, "OTP Verified Login Success")
             login(request , hotel_user)
             return redirect('/account/login/')
 
@@ -215,7 +217,9 @@ def verifyEmail_vendor(request,token):
 
 @login_required(login_url='login_vendor')
 def dashboard(request):
-    context = {'hotels' : Hotel.objects.filter(hotel_owner = request.user)}
+    hotel_vendor = HotelVendor.objects.get(id = request.user.id)
+    user_name = hotel_vendor.first_name
+    context = {'hotels' : Hotel.objects.filter(hotel_owner = request.user),'user':user_name}
     return render(request, 'vendor/vendor_dashboard.html', context)
 
 
@@ -238,6 +242,8 @@ def logout_vendor(request):
 
 @login_required(login_url='login_vendor')
 def add_hotel(request):
+    hotel_vendor = HotelVendor.objects.get(id = request.user.id)
+    user_name = hotel_vendor.first_name
     if request.method == "POST":
         hotel_name = request.POST.get('hotel_name')
         hotel_description = request.POST.get('hotel_description')
@@ -271,7 +277,7 @@ def add_hotel(request):
 
     ameneties = Ameneties.objects.all()
         
-    return render(request, 'vendor/add_hotel.html', context = {'ameneties' : ameneties})
+    return render(request, 'vendor/add_hotel.html', context = {'ameneties' : ameneties,'user':user_name})
 
 
 @login_required(login_url='login_vendor')
@@ -302,6 +308,8 @@ def delete_image(request, id):
 
 @login_required(login_url='login_vendor')
 def upload_images(request, slug):
+    hotel_vendor = HotelVendor.objects.get(id = request.user.id)
+    user_name = hotel_vendor.first_name
     hotel_obj = Hotel.objects.get(hotel_slug = slug)
     if request.method == "POST":
         image = request.FILES['image']
@@ -312,14 +320,12 @@ def upload_images(request, slug):
         )
         return HttpResponseRedirect(request.path_info)
 
-    return render(request, 'vendor/upload_images.html', context = {'images' : hotel_obj.hotel_images.all()})
+    return render(request, 'vendor/upload_images.html', context = {'images' : hotel_obj.hotel_images.all(),'user':user_name})
 
 
 
 @login_required(login_url='login_vendor')
 def delete_image(request, id):
-    print(id)
-    print("#######")
     hotel_image = HotelImages.objects.get(id = id)
     hotel_image.delete()
     messages.success(request, "Hotel Image deleted")
@@ -332,6 +338,8 @@ def delete_image(request, id):
 
 @login_required(login_url='login_vendor')
 def edit_hotel(request, slug):
+    hotel_vendor = HotelVendor.objects.get(id = request.user.id)
+    user_name = hotel_vendor.first_name
     hotel_obj = Hotel.objects.get(hotel_slug=slug)
     
     if request.user.id != hotel_obj.hotel_owner.id:
@@ -358,4 +366,4 @@ def edit_hotel(request, slug):
 
     ameneties = Ameneties.objects.all()
     
-    return render(request, 'vendor/edit_hotel.html', context={'hotel': hotel_obj, 'ameneties': ameneties})
+    return render(request, 'vendor/edit_hotel.html', context={'hotel': hotel_obj, 'ameneties': ameneties,'user':user_name})

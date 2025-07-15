@@ -29,7 +29,8 @@ def index(request):
 
 def hotel_details(request, slug):
     hotel = Hotel.objects.get(hotel_slug = slug)
-
+    hotel_user = HotelUser.objects.get(id=request.user.id)
+    user_name = hotel_user.first_name
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -50,9 +51,9 @@ def hotel_details(request, slug):
             booking_end_date =end_date,
             price = hotel.hotel_offer_price * days_count
         )
-        messages.warning(request, "Booking Captured.")
+        messages.success(request, f"Booking Success For {days_count} Days.")
 
         return HttpResponseRedirect(request.path_info)
 
 
-    return render(request, 'hotel_detail.html', context = {'hotel' : hotel})
+    return render(request, 'hotel_detail.html', context = {'hotel' : hotel,'user':user_name})

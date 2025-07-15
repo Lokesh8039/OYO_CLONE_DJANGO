@@ -18,8 +18,9 @@
 
    
       <div class="mb-3">
-        <span class="badge bg-primary me-2"><i class="bi bi-droplet-half me-1"></i>Swimming Pool</span>
-        <span class="badge bg-primary"><i class="bi bi-snow me-1"></i>AC</span>
+  {% for amenity in hotel.ameneties.all %}
+    <span class="badge bg-primary me-1">{{ amenity.name }}</span>
+  {% endfor %}
       </div>
 
 
