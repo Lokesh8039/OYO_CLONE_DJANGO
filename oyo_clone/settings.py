@@ -50,15 +50,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'oyo_clone.wsgi.application'
+import os
+from dotenv import load_dotenv
 
+
+
+load_dotenv()
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'oyo_clone',
-        'USER': 'postgres',
-        'PASSWORD': '1958',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -109,5 +114,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_USE_TLS = True 
 EMAIL_PORT = 587 
-EMAIL_HOST_USER = "alertmessage1349@gmail.com" 
-EMAIL_HOST_PASSWORD ="niic abvv bvzk zhde"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =os.getenv('EMAIL_HOST_PASSWORD')
